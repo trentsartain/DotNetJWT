@@ -1,0 +1,41 @@
+<h1 class="heading -large">{{ home.title }}</h1>
+
+<div ng-if="!home.loggedIn">
+	<h3 class="heading -medium">Login Below</h3>
+	<form ng-submit="home.login()" name="loginForm">
+		<div class="list list-inset col col-center">
+			<label class="item item-input">
+				<input type="text" placeholder="Username" ng-model="home.user.username" required>
+			</label>
+			<label class="item item-input">
+				<input type="password" placeholder="Password" ng-model="home.user.password" required>
+			</label>
+			<p ng-if="home.loginError" style="color:red;">Invalid login</p>
+			<br>
+			<div class="padding">
+				<input type="submit" id="submit" class="button button-block button-royal" value="Submit"/>   
+			</div>
+		</div>
+	</form>
+</div>
+
+<div ng-if="home.loggedIn">
+	<h2>You are logged in!</h2>
+	<input type="button" value="Logout" ng-click="home.logout()"/>
+	<h3>JWT information</h3>
+	<b>Token</b>: {{home.token}}<br/>
+	<b>Name</b>: {{home.claim.unique_name}}<br/>
+	<b>Audience (Client Id)</b>: {{home.claim.aud}}<br/>
+	<b>Issuer</b>: {{home.claim.iss}}<br/>
+	<b>Role(s)</b>: <br/>
+	<ul>
+		<li ng-repeat="role in home.claim.role">{{role}}</li>
+	</ul>
+	<b>Expires</b>: {{home.claim.exp * 1000 | date:'yyyy-MM-dd HH:mm:ss'}}<br/>
+</div>
+
+<div>
+	<h2>Test Resource Server</h2>
+	<input type="button" value="Test Protected API" ng-click="home.testApi()"/><br/><br/>
+	<p style="margin:0px;" ng-repeat="value in home.message">{{value}}</p>
+</div>
