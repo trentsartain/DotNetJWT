@@ -1,6 +1,8 @@
 # DotNetJWT
 This is an example project that provides a .NET Authentication Server using OWIN and a custom OAuthProvider and a resource server.  There is also an example AngularJS project that utilizes the authentication server to get the JWT and then passes it in the header to the resource server.
 
+To test, simply run both projects in visual studio (the solution is set up to run both when start is clicked), then run the TestJWTApp AngularJs project via command line.
+
 # AuthorizeServer.Api
 This is the authentication server.  Tokens can be requested from the endpoint /oauth2/token.  Posted data should be:
 
