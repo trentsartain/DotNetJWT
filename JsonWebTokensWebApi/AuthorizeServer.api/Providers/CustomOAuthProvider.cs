@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.DirectoryServices.Protocols;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthorizeServer.api.Models;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
-using System.DirectoryServices.ActiveDirectory;
 
 namespace AuthorizeServer.api.Providers
 {
     public class CustomOAuthProvider : OAuthAuthorizationServerProvider
     {
-
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
             string clientId;
@@ -44,26 +39,9 @@ namespace AuthorizeServer.api.Providers
 
         public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            /* POTENTIAL ACTIVE DIRECTORY CODE
-            object user = null;
-            if (AuthenticateActiveDirectory(context.UserName, context.Password, "ADDomain"))
-            {
-                //TODO: Get user from DB by username (password validated by Active Directory)
-            }
-            else
-            {
-                //TODO: Get user from DB by username & password (Active Directory validation failed)
-            }
-
-            if (user == null)
-            {
-                context.SetError("invalid_grant", "The user name or password is incorrect.");
-                return Task.FromResult<object>(null); ;
-            }
-            */
-
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
 
+            //TODO: Validate Username and Password (via database or something else)
             if (context.UserName != context.Password)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect");
@@ -82,30 +60,6 @@ namespace AuthorizeServer.api.Providers
             context.Validated(ticket);
 
             return Task.FromResult<object>(null);
-        }
-
-        private bool AuthenticateActiveDirectory(string username, string password, string domainName)
-        {
-            bool validation;
-            try
-            {
-                var domainContext = new DirectoryContext(DirectoryContextType.Domain, domainName, username, password);
-                var domain = Domain.GetDomain(domainContext);
-                var controller = domain.FindDomainController();
-
-                var lcon = new LdapConnection(new LdapDirectoryIdentifier(controller.IPAddress, false, false));
-                var nc = new NetworkCredential(username, password, domainName);
-                lcon.Credential = nc;
-                lcon.AuthType = AuthType.Negotiate;
-                lcon.Bind(nc);
-                validation = true;
-            }
-            catch (Exception)
-            {
-                validation = false;
-            }
-
-            return validation;
         }
     }
 }
