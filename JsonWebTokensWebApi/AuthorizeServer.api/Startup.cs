@@ -26,7 +26,7 @@ namespace AuthorizeServer.api
                 #if DEBUG
                     AllowInsecureHttp = true,
                 #endif
-                TokenEndpointPath = new PathString("/oauth2/token"),
+                TokenEndpointPath = new PathString("/token"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(30),
                 Provider = new CustomOAuthProvider(),
                 AccessTokenFormat = new CustomJwtFormat("http://localhost:2194")
